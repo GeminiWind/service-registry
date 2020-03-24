@@ -1,11 +1,12 @@
-# **Service Registry **
+# Service Registry
 
+![CI](https://github.com/GeminiWind/service-registry/workflows/CI/badge.svg?branch=master)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A client-side service discovery for microservice using `etcd`.
 
 ## Installation
-The easiest way to install `service-libraries` is using NPM. If you have Node.js installed, it is most likely that you have NPM installed as well.
+The easiest way to install `service-registry` is using NPM. If you have Node.js installed, it is most likely that you have NPM installed as well.
 
 ```
 $ npm install @hai.dinh/service-registry
