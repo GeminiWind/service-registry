@@ -21,17 +21,12 @@ jobs:
       run: yarn build
 
     - name: Prepare integration test environment
-      run: docker run -d --name etcd-server \
-            --publish 2379:2379 \
-            --publish 2380:2380 \
-            --env ALLOW_NONE_AUTHENTICATION=yes \
-            --env ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379 \
-            bitnami/etcd:latest
+      run: docker run -d --name etcd-server --publish 2379:2379 --publish 2380:2380 --env ALLOW_NONE_AUTHENTICATION=yes --env ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379 bitnami/etcd:latest
 
     - name: Integration Test
-      run: test:integrations
+      run: yarn test:integrations
 
     - run: npm publish --access public
-    if: startsWith(github.ref, 'refs/tags/v')
-    env:
-      NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      if: startsWith(github.ref, 'refs/tags/v')
+      env:
+        NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
