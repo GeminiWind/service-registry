@@ -14,69 +14,115 @@ $ npm install @hai.dinh/service-registry
 
 ## API
 
-### register(options)
+### register
+
+> register(opts: Service): Service
+
+`.register()` create a new service in service catalog
 
 ```javascript
 import ServiceRegistryFactory from @hai.dinh/service-registry
 
-const registry = new ServiceRegistryFactory.create({
+const registry = ServiceRegistryFactory.create({
     driver: 'etcd',
     hosts: '127.0.0.1:2379',
     env: 'dev'
 })
 
 
-registry.register({
-    name: 'storage-service',
+const response = await registry.register({
+    id: 'storage-service',
+    name: 'storage service',
     endpoint: 'http://storage-service:3001',
+    category: 'core',
     version: '0.0.1'
 })
 ```
 
-| options  | Description  |  Type | Required  |
-|---|---|---|---|
-| name | Name of the service you want to register | _string_ | yes
-| endpoint | Endpoint of the service, which is used to consume by other provides | _string_ | yes
-| version | Current version of the service, which must be follow by __*semver*__ specification | _string_ | yes
+**Parameter**
+- **opts**: [Service](#Service)
 
-### unregister(options)
+**Return** [Service](#Service)
+
+### unregister
+
+> unregister(id: string): boolean
+
+`.unregister()` delete the specified service in service catalog
 
 ```javascript
 import ServiceRegistryFactory from @hai.dinh/service-registry
 
-const registry = new ServiceRegistryFactory.create({
+const registry = ServiceRegistryFactory.create({
     driver: 'etcd',
     hosts: '127.0.0.1:2379',
     env: 'dev'
 })
 
 
-registry.unregister({
-    name: 'storage-service',
-})
+const isDeleted = await registry.unregister('storage-service');
+
 ```
+**Parameter**
+- **id**: string
 
-| options  | Description  |  Type | Required  |
-|---|---|---|---|
-|name | Name of the service you want to unregister | _string_ | yes
+**Return** boolean
 
-### get
+### get()
+
+> get(id: string): Service 
+
+`.get()` to retrieve the specified service in service catalog
 
 ```javascript
 import ServiceRegistryFactory from @hai.dinh/service-registry
 
-const registry = new ServiceRegistryFactory.create({
+const registry = ServiceRegistryFactory.create({
     driver: 'etcd',
     hosts: '127.0.0.1:2379',
     env: 'dev'
 })
 
 
-registry.get({
-    name: 'storage-service',
-})
+const storageService = await registry.get('storage-service')
 ```
 
-| options  | Description  |  Type | Required  |
-|---|---|---|---|
-| name | Name of the service you want to get information | _string_ | yes
+**Parameter**
+- **id**: string
+
+**Return** [Service](#Service)
+
+### list
+
+> list(): []Service
+
+`.list()` to retrieve service catalog
+
+```javascript
+import ServiceRegistryFactory from @hai.dinh/service-registry
+
+const registry = ServiceRegistryFactory.create({
+    driver: 'etcd',
+    hosts: '127.0.0.1:2379',
+    env: 'dev'
+})
+
+
+const services = await registry.list()
+```
+
+
+**Return** [][Service](#Service)
+
+## Interfaces
+
+### Service
+
+#### Properties
+
+- *id*: string
+- *name*: string
+- *category*: string
+- *endpoint*: string
+- *version*: string
+

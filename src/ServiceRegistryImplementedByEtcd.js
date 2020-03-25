@@ -1,6 +1,6 @@
 import { Etcd3 } from 'etcd3';
 import * as R from 'ramda';
-import { InternalError } from 'json-api-error';
+import { InternalError, NotFoundError } from 'json-api-error';
 
 class ServiceRegistryImplementedByEtcd {
   constructor({
@@ -14,31 +14,69 @@ class ServiceRegistryImplementedByEtcd {
     this.ns = client.namespace(env || 'dev');
   }
 
-  async get({ name }) {
-    let response;
+  async get(id) {
+    const response = await R.pipeP(
+      async (key) => {
+        let next;
 
-    const get = R.pipeP(
-      async key => await this.ns.get(key).string(), // eslint-disable-line no-return-await
-      value => JSON.parse(value),
-    );
+        try {
+          next = await this.ns.get(key).json();
+        } catch (e) {
+          throw new InternalError('Error in getting service information');
+        }
 
-    try {
-      response = await get(name);
-    } catch (error) {
-      throw new InternalError(`Error in retrieving information of service: "${name}"`);
-    }
+        return next;
+      },
+      (next) => {
+        if (!next) {
+          throw new NotFoundError(`Service with id: ${id} has not been register.`);
+        }
+
+        return next;
+      },
+    )(id);
+
+    return response;
+  }
+
+  async list() {
+    const response = await R.pipeP(
+      async () => {
+        let next;
+
+        try {
+          next = await this.ns.getAll().json();
+        } catch (e) {
+          throw new InternalError('Error in getting service information');
+        }
+
+        return next;
+      },
+      (next) => {
+        if (!next) {
+          return {};
+        }
+
+        return next;
+      },
+      R.values,
+    )();
 
     return response;
   }
 
   async register({
+    id,
     name,
+    category = '',
     endpoint,
     version,
   }) {
     try {
-      await this.ns.put(name).value(JSON.stringify({
+      await this.ns.put(id).value(JSON.stringify({
+        id,
         name,
+        category,
         endpoint,
         version,
       }));
@@ -47,19 +85,21 @@ class ServiceRegistryImplementedByEtcd {
     }
 
     return {
+      id,
       name,
+      category,
       endpoint,
       version,
     };
   }
 
-  async unregister({ name }) {
+  async unregister(id) {
     let response;
 
     try {
-      response = await this.ns.delete().key(name);
+      response = await this.ns.delete().key(id);
     } catch (error) {
-      throw new InternalError(`Error in unregistering service: "${name}"`);
+      throw new InternalError(`Error in unregistering service with id: "${id}"`);
     }
 
     const isDeleted = response.deleted === '1';
