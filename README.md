@@ -40,9 +40,9 @@ const response = await registry.register({
 ```
 
 **Parameter**
-- **opts**: [Service](#Service)
+- **opts**: [Service](#service)
 
-**Return** [Service](#Service)
+**Return** [Service](#service)
 
 ### unregister
 
@@ -90,7 +90,7 @@ const storageService = await registry.get('storage-service')
 **Parameter**
 - **id**: string
 
-**Return** [Service](#Service)
+**Return** [Service](#service)
 
 ### list
 
@@ -112,17 +112,21 @@ const services = await registry.list()
 ```
 
 
-**Return** [][Service](#Service)
+**Return** [][Service](#service)
 
 ## Interfaces
 
 ### Service
 
-#### Properties
+| Property | Description   |
+|-----------|---------------|
+| id                   | This is id of service, which is handled as identification for register, get or unregister service.<br /><br />Type: `string` |
+| name                   | This is name of service, which should be readable.<br />For e.g: "storage service".<br /><br />Type: `string`
+| category                   | The category of service. <br />For e.g: "security", "logging", "storage".<br /><br />Type: `string` 
+| endpoint                   | The endpoint of service for other services can consume.<br />For e.g: "http://storage-service:3000".<br /><br />Type: `string` 
+| version                   | The current version of service, which should be meet [semver](https://semver.org/).<br />For e.g: "1.0.0".<br /><br />Type: `string` 
 
-- *id*: string
-- *name*: string
-- *category*: string
-- *endpoint*: string
-- *version*: string
 
+## LICENSE
+
+[MIT](https://github.com/GeminiWind/service-registry/blob/HEAD/LICENSE)

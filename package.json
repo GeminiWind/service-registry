@@ -9,6 +9,10 @@
     "build": "chmod +x ./scripts/build && ./scripts/build",
     "prepublishOnly": "cp -r ./build/* . && rm -rf ./build"
   },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:GeminiWind/service-registry.git"
+  },
   "dependencies": {
     "ajv": "^6.10.2",
     "etcd3": "^0.2.13",
