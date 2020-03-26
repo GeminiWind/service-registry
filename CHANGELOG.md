@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 25-03-2020
+
 ### Changed
 
 - Update README.md
@@ -27,5 +29,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release
 
+[0.1.1]: https://github.com/GeminiWind/service-registry/compare/v0.1.1...v0.1.0
 [0.1.0]: https://github.com/GeminiWind/service-registry/compare/v0.1.0...v0.0.1
 [0.0.1]: https://github.com/GeminiWind/service-registry/releases/tag/v0.0.1
